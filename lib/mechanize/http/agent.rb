@@ -875,7 +875,8 @@ class Mechanize::HTTP::Agent
     new_uri = resolve response['Location'].to_s, page
 
     params = []
-    if referer.uri.to_s =~ Regexp.new("search=false")
+    search_param_regexp = Regexp.new("search=false")
+    if !(new_uri =~ search_param_regexp) and referer.uri.to_s =~ search_param_regexp
       params = [["search","false"]]
     end
 
