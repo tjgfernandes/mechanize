@@ -874,7 +874,12 @@ class Mechanize::HTTP::Agent
     @history.push(page, page.uri)
     new_uri = resolve response['Location'].to_s, page
 
-    fetch new_uri, redirect_method, {}, [], referer, redirects + 1
+    params = []
+    if referer.uri.to_s =~ Regexp.new("search=false")
+      params = [["search","false"]]
+    end
+
+    fetch new_uri, redirect_method, {}, params, referer, redirects + 1
   end
 
   # :section: Robots
