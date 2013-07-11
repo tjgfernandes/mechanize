@@ -996,7 +996,8 @@ class Mechanize::HTTP::Agent
     @history.push(page, page.uri)
 
     params = []
-    if referer.uri.to_s =~ Regexp.new("search=false")
+    search_param_regexp = Regexp.new("search=false")
+    if !(new_uri =~ search_param_regexp) and referer.uri.to_s =~ search_param_regexp
       params = [["search","false"]]
     end
 
