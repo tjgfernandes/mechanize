@@ -994,6 +994,7 @@ class Mechanize::HTTP::Agent
     new_uri = secure_resolve! response['Location'].to_s, page
 
     @history.push(page, page.uri)
+    new_uri = resolve response['Location'].to_s.gsub("search=&",""), page
 
     params = []
     search_param_regexp = Regexp.new("search=false")
