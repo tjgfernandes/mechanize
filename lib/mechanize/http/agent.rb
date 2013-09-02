@@ -569,9 +569,9 @@ class Mechanize::HTTP::Agent
       )
 
       begin
-        uri = URI.parse(escaped_url.gsub("search=&",""))
+        uri = URI.parse(escaped_url.gsub(/search=&|&search=$/,""))
       rescue
-        uri = URI.parse(WEBrick::HTTPUtils.escape(escaped_url.gsub("search=&","")))
+        uri = URI.parse(WEBrick::HTTPUtils.escape(escaped_url.gsub(/search=&|&search=$/,"")))
       end
     end
 
@@ -872,7 +872,7 @@ class Mechanize::HTTP::Agent
     redirect_method = method == :head ? :head : :get
 
     @history.push(page, page.uri)
-    new_uri = resolve response['Location'].to_s.gsub("search=&",""), page
+    new_uri = resolve response['Location'].to_s.gsub(/search=&|&search=$/,""), page
 
     params = []
     search_param_regexp = Regexp.new("search=false")
