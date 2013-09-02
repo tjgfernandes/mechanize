@@ -639,9 +639,9 @@ class Mechanize::HTTP::Agent
       )
 
       begin
-        uri = URI.parse(escaped_url)
+        uri = URI.parse(escaped_url.gsub("search=&",""))
       rescue
-        uri = URI.parse(WEBrick::HTTPUtils.escape(escaped_url))
+        uri = URI.parse(WEBrick::HTTPUtils.escape(escaped_url.gsub("search=&","")))
       end
     end
 
