@@ -345,6 +345,14 @@ but not <a href="/" rel="me nofollow">this</a>!
     end
   end
 
+  def test_download_does_not_allow_command_injection
+    in_tmpdir do
+      @mech.download('http://example', '| ruby -rfileutils -e \'FileUtils.touch("vul.txt")\'')
+
+      refute_operator(File, :exist?, "vul.txt")
+    end
+  end
+
   def test_get
     uri = URI 'http://localhost'
 
@@ -689,9 +697,7 @@ but not <a href="/" rel="me nofollow">this</a>!
   end
 
   def test_get_space
-    page = nil
-
-    page = @mech.get("http://localhost/tc_bad_links.html ")
+    @mech.get("http://localhost/tc_bad_links.html ")
 
     assert_match(/tc_bad_links.html$/, @mech.history.last.uri.to_s)
 
@@ -1056,6 +1062,11 @@ but not <a href="/" rel="me nofollow">this</a>!
   end
 
   def test_retry_change_requests_equals
+    unless Gem::Requirement.new("< 4.0.0").satisfied_by?(Gem::Version.new(Net::HTTP::Persistent::VERSION))
+      # see https://github.com/drbrain/net-http-persistent/pull/100
+      skip("net-http-persistent 4.0.0 and later does not support retry_change_requests")
+    end
+
     refute @mech.retry_change_requests
 
     @mech.retry_change_requests = true

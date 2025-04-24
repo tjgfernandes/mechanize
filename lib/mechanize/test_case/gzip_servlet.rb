@@ -13,8 +13,8 @@ class GzipServlet < WEBrick::HTTPServlet::AbstractServlet
     end
 
     if name = req.query['file'] then
-      open "#{TEST_DIR}/htdocs/#{name}" do |io|
-        string = ""
+      ::File.open("#{TEST_DIR}/htdocs/#{name}") do |io|
+        string = String.new
         zipped = StringIO.new string, 'w'
         Zlib::GzipWriter.wrap zipped do |gz|
           gz.write io.read
@@ -22,7 +22,7 @@ class GzipServlet < WEBrick::HTTPServlet::AbstractServlet
         res.body = string
       end
     else
-      res.body = ''
+      res.body = String.new
     end
 
     res['Content-Encoding'] = req['X-ResponseContentEncoding'] || 'gzip'

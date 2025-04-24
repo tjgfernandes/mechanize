@@ -175,7 +175,7 @@ class Mechanize
   # as SSL parameters or proxies:
   #
   #   agent = Mechanize.new do |a|
-  #     a.proxy_host = 'proxy.example'
+  #     a.proxy_addr = 'proxy.example'
   #     a.proxy_port = 8080
   #   end
   #
@@ -396,7 +396,7 @@ class Mechanize
     io = if io_or_filename.respond_to? :write then
            io_or_filename
          else
-           open io_or_filename, 'wb'
+           ::File.open(io_or_filename, 'wb')
          end
 
     case page
